@@ -1,30 +1,167 @@
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import './Home.css'
 
 const Home = () => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const heroRef = useRef(null)
+  const [scrollY, setScrollY] = useState(0)
+  const [stats, setStats] = useState({ clinics: 0, years: 0, coverage: 0 })
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (heroRef.current) {
+        const rect = heroRef.current.getBoundingClientRect()
+        setMousePosition({
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top
+        })
+      }
+    }
+
+    const handleScroll = () => {
+      setScrollY(window.scrollY)
+    }
+
+    // Animate stats counter
+    const animateStats = () => {
+      const duration = 2000
+      const steps = 60
+      const increment = 100 / steps
+      
+      let currentStep = 0
+      const timer = setInterval(() => {
+        currentStep++
+        const progress = currentStep / steps
+        
+        setStats({
+          clinics: Math.min(15, Math.floor(15 * progress)),
+          years: Math.min(7, Math.floor(7 * progress)),
+          coverage: Math.min(100, Math.floor(100 * progress))
+        })
+        
+        if (currentStep >= steps) {
+          clearInterval(timer)
+        }
+      }, duration / steps)
+    }
+
+    // Delay animation start
+    const timer = setTimeout(animateStats, 1000)
+
+    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('scroll', handleScroll)
+      clearTimeout(timer)
+    }
+  }, [])
+
   return (
     <div className="home">
       {/* Hero Section */}
-      <section className="hero">
+      <section className="hero" ref={heroRef}>
         <div className="hero-background">
-          <div className="hero-glow glow"></div>
+          <div 
+            className="hero-glow glow"
+            style={{
+              transform: `translate(${mousePosition.x * 0.02}px, ${mousePosition.y * 0.02}px) translate(-50%, -50%)`
+            }}
+          ></div>
+          <div className="floating-shapes">
+            {[...Array(12)].map((_, i) => (
+              <div
+                key={i}
+                className="floating-shape"
+                style={{
+                  left: `${(i * 8.33) % 100}%`,
+                  top: `${(i * 7) % 100}%`,
+                  animationDelay: `${i * 0.5}s`,
+                  animationDuration: `${10 + (i % 5)}s`
+                }}
+              ></div>
+            ))}
+          </div>
+          <div className="particles">
+            {[...Array(20)].map((_, i) => (
+              <div
+                key={i}
+                className="particle"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 5}s`,
+                  animationDuration: `${15 + Math.random() * 10}s`
+                }}
+              ></div>
+            ))}
+          </div>
+          <div 
+            className="hero-gradient"
+            style={{
+              background: `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.2), transparent)`
+            }}
+          ></div>
         </div>
         <div className="container">
           <div className="hero-content fade-in">
-            <h1 className="hero-title">
-              Delivering Excellence in
-              <span className="text-gradient"> Vision and Ophthalmic Solutions</span>
-            </h1>
+            <div className="hero-title-wrapper">
+              <h1 className="hero-title">
+                <span className="title-line">Delivering Excellence in</span>
+                <span className="title-highlight text-gradient">
+                  Vision and Ophthalmic Solutions
+                </span>
+              </h1>
+            </div>
             <p className="hero-subtitle">
               Founded in 2018 in Damascus, Habash Med supplies ophthalmic equipment, 
               disposables, and on-site technical support to clinics and hospitals across Syria.
             </p>
+            <div className="hero-stats">
+              <div className="hero-stat">
+                <div className="stat-number">{stats.clinics}+</div>
+                <div className="stat-label">Clinics Served</div>
+              </div>
+              <div className="hero-stat">
+                <div className="stat-number">{stats.years}+</div>
+                <div className="stat-label">Years Experience</div>
+              </div>
+              <div className="hero-stat">
+                <div className="stat-number">{stats.coverage}%</div>
+                <div className="stat-label">Service Coverage</div>
+              </div>
+            </div>
             <div className="hero-cta">
-              <Link to="/products" className="btn-primary">View Products</Link>
-              <Link to="/contact" className="btn-secondary">Contact Sales</Link>
+              <Link to="/products" className="btn-primary hero-btn">
+                <span>View Products</span>
+                <svg className="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </Link>
+              <Link to="/contact" className="btn-secondary hero-btn">
+                <span>Contact Sales</span>
+                <svg className="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </Link>
+            </div>
+            <div className="scroll-indicator">
+              <div className="scroll-mouse">
+                <div className="scroll-wheel"></div>
+              </div>
+              <span>Scroll to explore</span>
             </div>
           </div>
         </div>
+        <div 
+          className="cursor-follower"
+          style={{
+            left: `${mousePosition.x}px`,
+            top: `${mousePosition.y}px`
+          }}
+        ></div>
       </section>
 
       {/* Value Tiles */}
@@ -62,7 +199,7 @@ const Home = () => {
           <div className="product-preview">
             <div className="product-card card">
               <div className="product-image">
-                <img src="https://via.placeholder.com/400x300/3b82f6/ffffff?text=IOLs" alt="IOLs" />
+                <img src="https://via.placeholder.com/400x300/6366f1/ffffff?text=IOLs" alt="IOLs" />
               </div>
               <h3>Intraocular Lenses (IOLs)</h3>
               <p>Monofocal & hydrophobic acrylic lenses with superior quality and compatibility</p>
@@ -130,7 +267,7 @@ const Home = () => {
               <Link to="/coverage" className="btn-primary">View Coverage Map</Link>
             </div>
             <div className="coverage-image">
-              <img src="https://via.placeholder.com/600x400/1e293b/3b82f6?text=Syria+Coverage+Map" alt="Coverage Map" />
+              <img src="https://via.placeholder.com/600x400/1e293b/6366f1?text=Syria+Coverage+Map" alt="Coverage Map" />
             </div>
           </div>
         </div>
@@ -156,7 +293,7 @@ const Home = () => {
           </div>
           <div className="partners-logos">
             <div className="partner-logo">
-              <img src="https://via.placeholder.com/200x100/3b82f6/ffffff?text=Partner+1" alt="Partner" />
+              <img src="https://via.placeholder.com/200x100/6366f1/ffffff?text=Partner+1" alt="Partner" />
             </div>
             <div className="partner-logo">
               <img src="https://via.placeholder.com/200x100/8b5cf6/ffffff?text=Partner+2" alt="Partner" />
@@ -165,7 +302,7 @@ const Home = () => {
               <img src="https://via.placeholder.com/200x100/06b6d4/ffffff?text=Partner+3" alt="Partner" />
             </div>
             <div className="partner-logo">
-              <img src="https://via.placeholder.com/200x100/3b82f6/ffffff?text=Partner+4" alt="Partner" />
+              <img src="https://via.placeholder.com/200x100/6366f1/ffffff?text=Partner+4" alt="Partner" />
             </div>
           </div>
           <div className="text-center" style={{ marginTop: '3rem' }}>
@@ -205,4 +342,3 @@ const Home = () => {
 }
 
 export default Home
-
