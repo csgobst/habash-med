@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import ThemeSwitcher from './ThemeSwitcher'
 import './Header.css'
 
 const Header = () => {
@@ -96,6 +97,7 @@ const Header = () => {
           </nav>
 
           <div className="header-actions">
+            <ThemeSwitcher />
             <Link 
               to="/contact" 
               className="header-cta-btn"

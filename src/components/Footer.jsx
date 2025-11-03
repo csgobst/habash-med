@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import ThemeSwitcher from './ThemeSwitcher'
 import './Footer.css'
 
 const Footer = () => {
@@ -56,10 +57,15 @@ const Footer = () => {
 
         <div className="footer-bottom">
           <p>&copy; Habash Med, 2018–2025. All rights reserved.</p>
-          <div className="language-switch">
-            <span className="lang-active">EN</span>
-            <span className="lang-divider">|</span>
-            <span>AR</span>
+          <div className="footer-bottom-right">
+            <div className="footer-theme-switcher">
+              <ThemeSwitcher />
+            </div>
+            <div className="language-switch">
+              <span className="lang-active">EN</span>
+              <span className="lang-divider">|</span>
+              <span>AR</span>
+            </div>
           </div>
         </div>
       </div>
