@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [react()],
@@ -8,17 +8,14 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom']
-        }
-      }
-    }
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+        },
+      },
+    },
   },
   server: {
     historyApiFallback: {
-      rewrites: [
-        { from: /^\/habash-med\/.*$/, to: '/habash-med/index.html' }
-      ]
-    }
-  }
+      rewrites: [{ from: /^\/habash-med\/.*$/, to: '/habash-med/index.html' }],
+    },
+  },
 })
-
