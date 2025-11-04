@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Route, HashRouter as Router, Routes } from 'react-router-dom'
 import ErrorBoundary from './components/ErrorBoundary'
 import Footer from './components/Footer'
@@ -24,18 +24,18 @@ function App() {
 
   useEffect(() => {
     console.log('App component mounting...')
-    
+
     // Simulate initial load and check for critical resources
     const initializeApp = async () => {
       try {
         // Add a minimum loading time for UX
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+
         // Check if we're on GitHub Pages and handle routing
         if (window.location.hostname.includes('github.io')) {
           console.log('GitHub Pages detected, ensuring proper routing...')
         }
-        
+
         setIsLoading(false)
       } catch (error) {
         console.error('App initialization failed:', error)
@@ -49,23 +49,25 @@ function App() {
 
   if (loadError) {
     return (
-      <div style={{
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        background: '#0a0a0f',
-        color: '#f9fafb',
-        fontFamily: 'Arial, sans-serif',
-        textAlign: 'center',
-        padding: '20px'
-      }}>
+      <div
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          background: '#0a0a0f',
+          color: '#f9fafb',
+          fontFamily: 'Arial, sans-serif',
+          textAlign: 'center',
+          padding: '20px',
+        }}
+      >
         <h1 style={{ color: '#ef4444', marginBottom: '20px' }}>Failed to Load</h1>
         <p style={{ marginBottom: '20px', color: '#9ca3af' }}>
           There was an error loading the application.
         </p>
-        <button 
+        <button
           onClick={() => window.location.reload()}
           style={{
             padding: '10px 20px',
@@ -74,7 +76,7 @@ function App() {
             border: 'none',
             borderRadius: '5px',
             cursor: 'pointer',
-            fontSize: '16px'
+            fontSize: '16px',
           }}
         >
           Reload Page

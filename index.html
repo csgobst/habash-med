@@ -12,17 +12,19 @@
     <!-- GitHub Pages SPA redirect handling -->
     <script>
       // Enhanced GitHub Pages SPA support
-      (function(l) {
+      ;(function (l) {
         // Handle redirected URLs
-        if (l.search[1] === '/' ) {
-          var decoded = l.search.slice(1).split('&').map(function(s) { 
-            return s.replace(/~and~/g, '&')
-          }).join('?')
-          window.history.replaceState(null, null,
-              l.pathname.slice(0, -1) + decoded + l.hash
-          )
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&')
+            })
+            .join('?')
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash)
         }
-        
+
         // Ensure we're on the correct base path
         var basePath = '/habash-med'
         if (l.pathname === '/' || l.pathname === '') {
@@ -31,13 +33,13 @@
           window.location.replace(basePath + '/#' + l.pathname)
         }
       })(window.location)
-      
+
       // Add error handling for failed loads
-      window.addEventListener('error', function(e) {
+      window.addEventListener('error', function (e) {
         console.error('Resource failed to load:', e.target.src || e.target.href)
         if (e.target.tagName === 'SCRIPT' && e.target.src) {
           // If main script fails, try to reload after a short delay
-          setTimeout(function() {
+          setTimeout(function () {
             window.location.reload()
           }, 2000)
         }

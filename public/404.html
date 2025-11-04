@@ -4,34 +4,73 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/habash-med/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Founded in 2018 in Damascus, Habash Med supplies ophthalmic equipment, disposables, and on-site technical support to clinics and hospitals across Syria." />
+    <meta
+      name="description"
+      content="Founded in 2018 in Damascus, Habash Med supplies ophthalmic equipment, disposables, and on-site technical support to clinics and hospitals across Syria."
+    />
     <title>Habash Med — Ophthalmic Products & Technical Services in Syria</title>
     <!-- GitHub Pages 404 to SPA redirect -->
     <script>
       // Single Page App redirect for GitHub Pages
       // This script takes the current url and redirects to the index page with the url as a hash
-      var pathSegmentsToKeep = 1;
-      
-      var l = window.location;
-      var redirect = l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + 
-        '/?/' + 
-        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') + 
-        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') + 
-        l.hash;
-        
-      window.location.replace(redirect);
+      var pathSegmentsToKeep = 1
+
+      var l = window.location
+      var redirect =
+        l.protocol +
+        '//' +
+        l.hostname +
+        (l.port ? ':' + l.port : '') +
+        l.pathname
+          .split('/')
+          .slice(0, 1 + pathSegmentsToKeep)
+          .join('/') +
+        '/?/' +
+        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+        l.hash
+
+      window.location.replace(redirect)
     </script>
   </head>
   <body>
-    <div style="font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #0a0a0f; color: #f9fafb; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-      <h1 style="color: #6366f1; margin-bottom: 20px;">Redirecting...</h1>
-      <p>If you are not redirected automatically, <a href="/habash-med/" style="color: #6366f1;">click here</a>.</p>
-      <div style="margin-top: 30px; border: 2px solid #6366f1; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;"></div>
+    <div
+      style="
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 50px;
+        background: #0a0a0f;
+        color: #f9fafb;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      "
+    >
+      <h1 style="color: #6366f1; margin-bottom: 20px">Redirecting...</h1>
+      <p>
+        If you are not redirected automatically,
+        <a href="/habash-med/" style="color: #6366f1">click here</a>.
+      </p>
+      <div
+        style="
+          margin-top: 30px;
+          border: 2px solid #6366f1;
+          border-radius: 50%;
+          width: 40px;
+          height: 40px;
+          animation: spin 1s linear infinite;
+        "
+      ></div>
       <style>
         @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
         }
       </style>
     </div>
