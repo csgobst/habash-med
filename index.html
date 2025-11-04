@@ -11,22 +11,41 @@
     <title>Habash Med — Ophthalmic Products & Technical Services in Syria</title>
     <!-- GitHub Pages SPA redirect handling -->
     <script>
-      ;(function (l) {
-        if (l.search[1] === '/') {
-          var decoded = l.search
-            .slice(1)
-            .split('&')
-            .map(function (s) {
-              return s.replace(/~and~/g, '&')
-            })
-            .join('?')
-          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash)
+      // Enhanced GitHub Pages SPA support
+      (function(l) {
+        // Handle redirected URLs
+        if (l.search[1] === '/' ) {
+          var decoded = l.search.slice(1).split('&').map(function(s) { 
+            return s.replace(/~and~/g, '&')
+          }).join('?')
+          window.history.replaceState(null, null,
+              l.pathname.slice(0, -1) + decoded + l.hash
+          )
+        }
+        
+        // Ensure we're on the correct base path
+        var basePath = '/habash-med'
+        if (l.pathname === '/' || l.pathname === '') {
+          window.location.replace(basePath + '/')
+        } else if (!l.pathname.startsWith(basePath) && l.pathname !== '/404.html') {
+          window.location.replace(basePath + '/#' + l.pathname)
         }
       })(window.location)
+      
+      // Add error handling for failed loads
+      window.addEventListener('error', function(e) {
+        console.error('Resource failed to load:', e.target.src || e.target.href)
+        if (e.target.tagName === 'SCRIPT' && e.target.src) {
+          // If main script fails, try to reload after a short delay
+          setTimeout(function() {
+            window.location.reload()
+          }, 2000)
+        }
+      })
     </script>
-    <script type="module" crossorigin src="/habash-med/assets/index-BoB11AJC.js"></script>
-    <link rel="modulepreload" crossorigin href="/habash-med/assets/vendor-BkP_kGt7.js">
-    <link rel="stylesheet" crossorigin href="/habash-med/assets/index-CQGJ1DxJ.css">
+    <script type="module" crossorigin src="/habash-med/assets/index.B8uETRAS.js"></script>
+    <link rel="modulepreload" crossorigin href="/habash-med/assets/vendor.Bq8UJ9YW.js">
+    <link rel="stylesheet" crossorigin href="/habash-med/assets/index.CNOf7Pt6.css">
   </head>
   <body>
     <div id="root"></div>
