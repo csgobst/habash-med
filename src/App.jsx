@@ -17,6 +17,7 @@ import Services from './pages/Services'
 import SimpleHome from './pages/SimpleHome'
 import Strategy from './pages/Strategy'
 import Team from './pages/Team'
+import performanceMonitor from './utils/performanceMonitor'
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
@@ -24,6 +25,7 @@ function App() {
 
   useEffect(() => {
     console.log('App component mounting...')
+    let isComponentMounted = true
 
     // Simulate initial load and check for critical resources
     const initializeApp = async () => {
@@ -36,15 +38,60 @@ function App() {
           console.log('GitHub Pages detected, ensuring proper routing...')
         }
 
-        setIsLoading(false)
+        // Verify critical DOM elements exist
+        if (!document.getElementById('root')) {
+          throw new Error('Root element not found')
+        }
+
+        if (isComponentMounted) {
+          setIsLoading(false)
+        }
       } catch (error) {
         console.error('App initialization failed:', error)
-        setLoadError(error)
-        setIsLoading(false)
+        if (isComponentMounted) {
+          setLoadError(error)
+          setIsLoading(false)
+        }
       }
     }
 
+    // Add error recovery mechanism
+    const errorHandler = (event) => {
+      console.error('Unhandled error in App:', event.error)
+      performanceMonitor.reportError(event.error)
+      if (isComponentMounted && !loadError) {
+        setLoadError(event.error)
+      }
+    }
+
+    const rejectionHandler = (event) => {
+      console.error('Unhandled promise rejection in App:', event.reason)
+      performanceMonitor.reportError(new Error(event.reason))
+      if (isComponentMounted && !loadError) {
+        setLoadError(new Error(event.reason))
+      }
+    }
+
+    window.addEventListener('error', errorHandler)
+    window.addEventListener('unhandledrejection', rejectionHandler)
+
+    // Start performance monitoring in production
+    if (process.env.NODE_ENV === 'production') {
+      performanceMonitor.start()
+    }
+
     initializeApp()
+
+    return () => {
+      isComponentMounted = false
+      window.removeEventListener('error', errorHandler)
+      window.removeEventListener('unhandledrejection', rejectionHandler)
+      
+      // Stop performance monitoring
+      if (process.env.NODE_ENV === 'production') {
+        performanceMonitor.stop()
+      }
+    }
   }, [])
 
   if (loadError) {

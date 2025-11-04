@@ -9,41 +9,85 @@
       content="Founded in 2018 in Damascus, Habash Med supplies ophthalmic equipment, disposables, and on-site technical support to clinics and hospitals across Syria."
     />
     <title>Habash Med — Ophthalmic Products & Technical Services in Syria</title>
-    <!-- GitHub Pages SPA redirect handling -->
+    <!-- GitHub Pages SPA redirect handling with enhanced error recovery -->
     <script>
-      // Enhanced GitHub Pages SPA support
-      ;(function (l) {
-        // Handle redirected URLs
-        if (l.search[1] === '/') {
-          var decoded = l.search
-            .slice(1)
-            .split('&')
-            .map(function (s) {
-              return s.replace(/~and~/g, '&')
-            })
-            .join('?')
-          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash)
+      ;(function () {
+        var l = window.location
+        var errorCount = 0
+        var MAX_RETRIES = 2
+
+        // Enhanced GitHub Pages SPA support with error handling
+        try {
+          // Handle redirected URLs
+          if (l.search[1] === '/') {
+            var decoded = l.search
+              .slice(1)
+              .split('&')
+              .map(function (s) {
+                return s.replace(/~and~/g, '&')
+              })
+              .join('?')
+            window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash)
+          }
+
+          // Ensure we're on the correct base path
+          var basePath = '/habash-med'
+          if (l.pathname === '/' || l.pathname === '') {
+            window.location.replace(basePath + '/')
+          } else if (!l.pathname.startsWith(basePath) && l.pathname !== '/404.html') {
+            window.location.replace(basePath + '/#' + l.pathname)
+          }
+        } catch (error) {
+          console.error('Routing error:', error)
+          // Fallback to home page
+          window.location.replace('/habash-med/')
         }
 
-        // Ensure we're on the correct base path
-        var basePath = '/habash-med'
-        if (l.pathname === '/' || l.pathname === '') {
-          window.location.replace(basePath + '/')
-        } else if (!l.pathname.startsWith(basePath) && l.pathname !== '/404.html') {
-          window.location.replace(basePath + '/#' + l.pathname)
-        }
-      })(window.location)
+        // Enhanced error handling for failed loads
+        window.addEventListener('error', function (e) {
+          console.error('Resource failed to load:', e.target.src || e.target.href || e.message)
+          errorCount++
+          
+          if (e.target && e.target.tagName === 'SCRIPT' && e.target.src) {
+            // If main script fails and we haven't retried too many times
+            if (errorCount <= MAX_RETRIES) {
+              console.warn('Script failed to load, attempting reload in 2 seconds...')
+              setTimeout(function () {
+                window.location.reload()
+              }, 2000)
+            } else {
+              // Show fallback content
+              document.body.innerHTML = 
+                '<div style="padding: 20px; text-align: center; font-family: Arial, sans-serif; background: #0a0a0f; color: #f9fafb; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">' +
+                '<h1 style="color: #ef4444;">Failed to Load</h1>' +
+                '<p>Unable to load the application. Please check your connection and try again.</p>' +
+                '<button onclick="window.location.reload()" style="padding: 10px 20px; background: #6366f1; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px;">Reload Page</button>' +
+                '</div>'
+            }
+          }
+        })
 
-      // Add error handling for failed loads
-      window.addEventListener('error', function (e) {
-        console.error('Resource failed to load:', e.target.src || e.target.href)
-        if (e.target.tagName === 'SCRIPT' && e.target.src) {
-          // If main script fails, try to reload after a short delay
-          setTimeout(function () {
-            window.location.reload()
-          }, 2000)
+        // Clean up any existing service workers that might cause issues
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+              registration.unregister()
+              console.log('Unregistered service worker:', registration)
+            }
+          }).catch(function(error) {
+            console.warn('Service worker cleanup failed:', error)
+          })
         }
-      })
+
+        // Memory cleanup for better performance
+        window.addEventListener('beforeunload', function() {
+          // Clear any remaining timers or intervals
+          var highestId = setTimeout(function(){}, 0)
+          for (var i = 0; i < highestId; i++) {
+            clearTimeout(i)
+          }
+        })
+      })()
     </script>
   </head>
   <body>

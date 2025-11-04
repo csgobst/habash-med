@@ -4,11 +4,27 @@ const LoadingScreen = () => {
   const [dots, setDots] = useState('')
 
   useEffect(() => {
+    let isComponentMounted = true
+    
     const interval = setInterval(() => {
-      setDots((prev) => (prev.length >= 3 ? '' : prev + '.'))
+      if (isComponentMounted) {
+        setDots((prev) => (prev.length >= 3 ? '' : prev + '.'))
+      }
     }, 500)
 
-    return () => clearInterval(interval)
+    // Auto-reload if loading takes too long (prevent infinite loading)
+    const timeoutId = setTimeout(() => {
+      if (isComponentMounted) {
+        console.warn('Loading timeout reached, reloading page')
+        window.location.reload()
+      }
+    }, 15000) // 15 seconds timeout
+
+    return () => {
+      isComponentMounted = false
+      clearInterval(interval)
+      clearTimeout(timeoutId)
+    }
   }, [])
 
   return (

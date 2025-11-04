@@ -3,13 +3,33 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import './index.css'
 
-// Global error handler
+// Global error handler with recovery mechanism
+let errorCount = 0
+const MAX_ERRORS = 3
+
 window.addEventListener('error', (event) => {
   console.error('Global error:', event.error)
+  errorCount++
+  
+  // If too many errors, reload the page
+  if (errorCount >= MAX_ERRORS) {
+    console.warn('Too many errors detected, reloading page...')
+    setTimeout(() => window.location.reload(), 1000)
+  }
 })
 
 window.addEventListener('unhandledrejection', (event) => {
   console.error('Unhandled promise rejection:', event.reason)
+  errorCount++
+  
+  // Prevent the default handling (which would log to console)
+  event.preventDefault()
+  
+  // If too many errors, reload the page
+  if (errorCount >= MAX_ERRORS) {
+    console.warn('Too many errors detected, reloading page...')
+    setTimeout(() => window.location.reload(), 1000)
+  }
 })
 
 // Ensure DOM is ready

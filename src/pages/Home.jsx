@@ -14,32 +14,54 @@ const Home = () => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     setAnimationsEnabled(!prefersReducedMotion)
 
+    let mouseTimer
+    let scrollTimer
+    let statsTimer
+    let animationTimer
+    let isComponentMounted = true
+
     const handleMouseMove = (e) => {
-      if (heroRef.current && animationsEnabled) {
+      if (!isComponentMounted || !heroRef.current || !animationsEnabled) return
+      
+      // Throttle mouse events to prevent performance issues
+      if (mouseTimer) return
+      
+      mouseTimer = setTimeout(() => {
         try {
-          const rect = heroRef.current.getBoundingClientRect()
-          setMousePosition({
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top,
-          })
+          if (heroRef.current && isComponentMounted) {
+            const rect = heroRef.current.getBoundingClientRect()
+            setMousePosition({
+              x: e.clientX - rect.left,
+              y: e.clientY - rect.top,
+            })
+          }
         } catch (error) {
           console.warn('Mouse tracking error:', error)
         }
-      }
+        mouseTimer = null
+      }, 16) // ~60fps
     }
 
     const handleScroll = () => {
-      if (animationsEnabled) {
-        setScrollY(window.scrollY)
-      }
+      if (!isComponentMounted || !animationsEnabled) return
+      
+      // Throttle scroll events
+      if (scrollTimer) return
+      
+      scrollTimer = setTimeout(() => {
+        if (isComponentMounted) {
+          setScrollY(window.scrollY)
+        }
+        scrollTimer = null
+      }, 16) // ~60fps
     }
 
     // Animate stats counter with error handling
     const animateStats = () => {
-      if (!animationsEnabled) {
+      if (!animationsEnabled || !isComponentMounted) {
         // Set final values immediately if animations are disabled
         setStats({ clinics: 15, years: 7, coverage: 100 })
-        return
+        return null
       }
 
       try {
@@ -48,6 +70,11 @@ const Home = () => {
 
         let currentStep = 0
         const timer = setInterval(() => {
+          if (!isComponentMounted) {
+            clearInterval(timer)
+            return
+          }
+          
           currentStep++
           const progress = currentStep / steps
 
@@ -65,17 +92,17 @@ const Home = () => {
         return timer
       } catch (error) {
         console.warn('Stats animation error:', error)
-        setStats({ clinics: 15, years: 7, coverage: 100 })
+        if (isComponentMounted) {
+          setStats({ clinics: 15, years: 7, coverage: 100 })
+        }
         return null
       }
     }
 
     // Delay animation start
-    const animationTimer = setTimeout(() => {
-      const statsTimer = animateStats()
-      // Store the timer reference for cleanup
-      if (statsTimer) {
-        window.statsAnimationTimer = statsTimer
+    animationTimer = setTimeout(() => {
+      if (isComponentMounted) {
+        statsTimer = animateStats()
       }
     }, 1000)
 
@@ -86,15 +113,18 @@ const Home = () => {
     }
 
     return () => {
+      isComponentMounted = false
+      
       if (animationsEnabled) {
         window.removeEventListener('mousemove', handleMouseMove)
         window.removeEventListener('scroll', handleScroll)
       }
-      clearTimeout(animationTimer)
-      if (window.statsAnimationTimer) {
-        clearInterval(window.statsAnimationTimer)
-        delete window.statsAnimationTimer
-      }
+      
+      // Clear all timers
+      if (mouseTimer) clearTimeout(mouseTimer)
+      if (scrollTimer) clearTimeout(scrollTimer)
+      if (animationTimer) clearTimeout(animationTimer)
+      if (statsTimer) clearInterval(statsTimer)
     }
   }, [animationsEnabled])
 

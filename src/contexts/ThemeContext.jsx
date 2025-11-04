@@ -60,31 +60,52 @@ const themes = {
 
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
-    // Safely access localStorage
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('theme') || 'blue'
+    // Safely access localStorage with fallback
+    if (typeof window !== 'undefined' && window.localStorage) {
+      try {
+        return localStorage.getItem('theme') || 'blue'
+      } catch (error) {
+        console.warn('Failed to read theme from localStorage:', error)
+        return 'blue'
+      }
     }
     return 'blue'
   })
 
   useEffect(() => {
-    // Safely access localStorage
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('theme', theme)
+    // Safely access localStorage with error handling
+    if (typeof window !== 'undefined' && window.localStorage) {
+      try {
+        localStorage.setItem('theme', theme)
+      } catch (error) {
+        console.warn('Failed to save theme to localStorage:', error)
+      }
     }
+    
     const themeColors = themes[theme]
+    if (!themeColors) {
+      console.warn('Invalid theme:', theme)
+      return
+    }
 
-    // Update CSS variables
-    document.documentElement.style.setProperty('--primary', themeColors.primary)
-    document.documentElement.style.setProperty('--primary-dark', themeColors.primaryDark)
-    document.documentElement.style.setProperty('--primary-light', themeColors.primaryLight)
-    document.documentElement.style.setProperty('--secondary', themeColors.secondary)
-    document.documentElement.style.setProperty('--accent', themeColors.accent)
-    document.documentElement.style.setProperty('--accent-2', themeColors.accent2)
-    document.documentElement.style.setProperty('--glow-primary', `${themeColors.primary}66`)
-    document.documentElement.style.setProperty('--glow-secondary', `${themeColors.secondary}66`)
-    document.documentElement.style.setProperty('--glow-accent', `${themeColors.accent}66`)
-    document.documentElement.style.setProperty('--border-glow', `${themeColors.primary}4d`)
+    try {
+      // Update CSS variables with error handling
+      const docElement = document.documentElement
+      if (!docElement) return
+      
+      docElement.style.setProperty('--primary', themeColors.primary)
+      docElement.style.setProperty('--primary-dark', themeColors.primaryDark)
+      docElement.style.setProperty('--primary-light', themeColors.primaryLight)
+      docElement.style.setProperty('--secondary', themeColors.secondary)
+      docElement.style.setProperty('--accent', themeColors.accent)
+      docElement.style.setProperty('--accent-2', themeColors.accent2)
+      docElement.style.setProperty('--glow-primary', `${themeColors.primary}66`)
+      docElement.style.setProperty('--glow-secondary', `${themeColors.secondary}66`)
+      docElement.style.setProperty('--glow-accent', `${themeColors.accent}66`)
+      docElement.style.setProperty('--border-glow', `${themeColors.primary}4d`)
+    } catch (error) {
+      console.warn('Failed to update CSS variables:', error)
+    }
   }, [theme])
 
   const changeTheme = (newTheme) => {
