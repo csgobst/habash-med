@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 const ThemeContext = createContext()
 
@@ -73,7 +73,7 @@ export const ThemeProvider = ({ children }) => {
       localStorage.setItem('theme', theme)
     }
     const themeColors = themes[theme]
-    
+
     // Update CSS variables
     document.documentElement.style.setProperty('--primary', themeColors.primary)
     document.documentElement.style.setProperty('--primary-dark', themeColors.primaryDark)
@@ -92,9 +92,6 @@ export const ThemeProvider = ({ children }) => {
   }
 
   return (
-    <ThemeContext.Provider value={{ theme, themes, changeTheme }}>
-      {children}
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={{ theme, themes, changeTheme }}>{children}</ThemeContext.Provider>
   )
 }
-

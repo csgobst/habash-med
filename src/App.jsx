@@ -3,22 +3,22 @@ import ErrorBoundary from './components/ErrorBoundary'
 import Footer from './components/Footer'
 import Header from './components/Header'
 import ScrollToTop from './components/ScrollToTop'
-import { ThemeProvider } from './contexts/ThemeContext'
 import TestComponent from './components/TestComponent'
+import { ThemeProvider } from './contexts/ThemeContext'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import Coverage from './pages/Coverage'
 import Home from './pages/Home'
-import SimpleHome from './pages/SimpleHome'
 import Partners from './pages/Partners'
 import Products from './pages/Products'
 import Services from './pages/Services'
+import SimpleHome from './pages/SimpleHome'
 import Strategy from './pages/Strategy'
 import Team from './pages/Team'
 
 function App() {
   console.log('App component rendering...')
-  
+
   return (
     <ErrorBoundary>
       <ThemeProvider>
