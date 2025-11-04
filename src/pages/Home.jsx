@@ -22,10 +22,10 @@ const Home = () => {
 
     const handleMouseMove = (e) => {
       if (!isComponentMounted || !heroRef.current || !animationsEnabled) return
-      
+
       // Throttle mouse events to prevent performance issues
       if (mouseTimer) return
-      
+
       mouseTimer = setTimeout(() => {
         try {
           if (heroRef.current && isComponentMounted) {
@@ -44,10 +44,10 @@ const Home = () => {
 
     const handleScroll = () => {
       if (!isComponentMounted || !animationsEnabled) return
-      
+
       // Throttle scroll events
       if (scrollTimer) return
-      
+
       scrollTimer = setTimeout(() => {
         if (isComponentMounted) {
           setScrollY(window.scrollY)
@@ -74,7 +74,7 @@ const Home = () => {
             clearInterval(timer)
             return
           }
-          
+
           currentStep++
           const progress = currentStep / steps
 
@@ -114,12 +114,12 @@ const Home = () => {
 
     return () => {
       isComponentMounted = false
-      
+
       if (animationsEnabled) {
         window.removeEventListener('mousemove', handleMouseMove)
         window.removeEventListener('scroll', handleScroll)
       }
-      
+
       // Clear all timers
       if (mouseTimer) clearTimeout(mouseTimer)
       if (scrollTimer) clearTimeout(scrollTimer)

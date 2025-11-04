@@ -47,7 +47,7 @@
         window.addEventListener('error', function (e) {
           console.error('Resource failed to load:', e.target.src || e.target.href || e.message)
           errorCount++
-          
+
           if (e.target && e.target.tagName === 'SCRIPT' && e.target.src) {
             // If main script fails and we haven't retried too many times
             if (errorCount <= MAX_RETRIES) {
@@ -57,7 +57,7 @@
               }, 2000)
             } else {
               // Show fallback content
-              document.body.innerHTML = 
+              document.body.innerHTML =
                 '<div style="padding: 20px; text-align: center; font-family: Arial, sans-serif; background: #0a0a0f; color: #f9fafb; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">' +
                 '<h1 style="color: #ef4444;">Failed to Load</h1>' +
                 '<p>Unable to load the application. Please check your connection and try again.</p>' +
@@ -69,20 +69,23 @@
 
         // Clean up any existing service workers that might cause issues
         if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.getRegistrations().then(function(registrations) {
-            for(let registration of registrations) {
-              registration.unregister()
-              console.log('Unregistered service worker:', registration)
-            }
-          }).catch(function(error) {
-            console.warn('Service worker cleanup failed:', error)
-          })
+          navigator.serviceWorker
+            .getRegistrations()
+            .then(function (registrations) {
+              for (let registration of registrations) {
+                registration.unregister()
+                console.log('Unregistered service worker:', registration)
+              }
+            })
+            .catch(function (error) {
+              console.warn('Service worker cleanup failed:', error)
+            })
         }
 
         // Memory cleanup for better performance
-        window.addEventListener('beforeunload', function() {
+        window.addEventListener('beforeunload', function () {
           // Clear any remaining timers or intervals
-          var highestId = setTimeout(function(){}, 0)
+          var highestId = setTimeout(function () {}, 0)
           for (var i = 0; i < highestId; i++) {
             clearTimeout(i)
           }

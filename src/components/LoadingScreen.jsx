@@ -5,7 +5,7 @@ const LoadingScreen = () => {
 
   useEffect(() => {
     let isComponentMounted = true
-    
+
     const interval = setInterval(() => {
       if (isComponentMounted) {
         setDots((prev) => (prev.length >= 3 ? '' : prev + '.'))

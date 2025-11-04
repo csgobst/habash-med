@@ -41,12 +41,12 @@ jobs:
         run: |
           # Copy index.html to 404.html for SPA routing
           cp dist/index.html dist/404.html
-          
+
           # Add robots.txt for better SEO
           echo "User-agent: *" > dist/robots.txt
           echo "Allow: /" >> dist/robots.txt
           echo "Sitemap: https://csgobst.github.io/habash-med/sitemap.xml" >> dist/robots.txt
-          
+
           # Create a basic sitemap
           cat > dist/sitemap.xml << 'EOF'
           <?xml version="1.0" encoding="UTF-8"?>
@@ -58,7 +58,7 @@ jobs:
             <url><loc>https://csgobst.github.io/habash-med/#/contact</loc><priority>0.7</priority></url>
           </urlset>
           EOF
-          
+
           # Verify build output
           ls -la dist/
           echo "Build verification complete"

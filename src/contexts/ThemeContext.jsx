@@ -81,7 +81,7 @@ export const ThemeProvider = ({ children }) => {
         console.warn('Failed to save theme to localStorage:', error)
       }
     }
-    
+
     const themeColors = themes[theme]
     if (!themeColors) {
       console.warn('Invalid theme:', theme)
@@ -92,7 +92,7 @@ export const ThemeProvider = ({ children }) => {
       // Update CSS variables with error handling
       const docElement = document.documentElement
       if (!docElement) return
-      
+
       docElement.style.setProperty('--primary', themeColors.primary)
       docElement.style.setProperty('--primary-dark', themeColors.primaryDark)
       docElement.style.setProperty('--primary-light', themeColors.primaryLight)

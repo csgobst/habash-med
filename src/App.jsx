@@ -86,7 +86,7 @@ function App() {
       isComponentMounted = false
       window.removeEventListener('error', errorHandler)
       window.removeEventListener('unhandledrejection', rejectionHandler)
-      
+
       // Stop performance monitoring
       if (process.env.NODE_ENV === 'production') {
         performanceMonitor.stop()

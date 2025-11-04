@@ -11,7 +11,7 @@ class PerformanceMonitor {
 
   start() {
     if (this.isMonitoring) return
-    
+
     this.isMonitoring = true
     console.log('Performance monitoring started')
 
@@ -22,14 +22,14 @@ class PerformanceMonitor {
 
     // Monitor for memory leaks in timers
     this.monitorTimers()
-    
+
     // Monitor DOM size
     this.monitorDOMSize()
   }
 
   stop() {
     if (!this.isMonitoring) return
-    
+
     this.isMonitoring = false
     if (this.checkInterval) {
       clearInterval(this.checkInterval)
@@ -48,7 +48,7 @@ class PerformanceMonitor {
     if (percentage > 80) {
       this.memoryWarnings++
       console.warn(`High memory usage: ${percentage.toFixed(2)}%`)
-      
+
       if (this.memoryWarnings >= this.maxMemoryWarnings) {
         console.error('Memory usage critical, triggering reload...')
         this.triggerReload('High memory usage')
@@ -66,24 +66,24 @@ class PerformanceMonitor {
     const activeTimers = new Set()
     const activeIntervals = new Set()
 
-    window.setTimeout = function(...args) {
+    window.setTimeout = function (...args) {
       const id = originalSetTimeout.apply(this, args)
       activeTimers.add(id)
       return id
     }
 
-    window.setInterval = function(...args) {
+    window.setInterval = function (...args) {
       const id = originalSetInterval.apply(this, args)
       activeIntervals.add(id)
       return id
     }
 
-    window.clearTimeout = function(id) {
+    window.clearTimeout = function (id) {
       activeTimers.delete(id)
       return originalClearTimeout.call(this, id)
     }
 
-    window.clearInterval = function(id) {
+    window.clearInterval = function (id) {
       activeIntervals.delete(id)
       return originalClearInterval.call(this, id)
     }
@@ -93,7 +93,7 @@ class PerformanceMonitor {
       if (activeTimers.size > 100 || activeIntervals.size > 50) {
         console.warn('Potential timer leak detected:', {
           timeouts: activeTimers.size,
-          intervals: activeIntervals.size
+          intervals: activeIntervals.size,
         })
       }
     }, 60000) // Check every minute
@@ -111,7 +111,7 @@ class PerformanceMonitor {
   reportError(error) {
     this.errorCount++
     console.error('Error reported to monitor:', error)
-    
+
     if (this.errorCount >= this.maxErrors) {
       console.error('Too many errors detected, triggering reload...')
       this.triggerReload('Multiple errors')
@@ -120,7 +120,7 @@ class PerformanceMonitor {
 
   triggerReload(reason) {
     console.warn('Triggering page reload due to:', reason)
-    
+
     // Give a moment for cleanup
     setTimeout(() => {
       window.location.reload()
@@ -130,7 +130,7 @@ class PerformanceMonitor {
   // Clean up resources before page unload
   cleanup() {
     this.stop()
-    
+
     // Clear all timers (aggressive cleanup)
     const highestTimeoutId = setTimeout(() => {}, 0)
     for (let i = 0; i < highestTimeoutId; i++) {

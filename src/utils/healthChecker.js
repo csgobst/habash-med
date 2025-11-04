@@ -22,7 +22,7 @@ export class HealthChecker {
         results.push({
           name: check.name,
           status: result ? 'pass' : 'fail',
-          result
+          result,
         })
         if (!result) {
           this.isHealthy = false
@@ -31,7 +31,7 @@ export class HealthChecker {
         results.push({
           name: check.name,
           status: 'error',
-          error: error.message
+          error: error.message,
         })
         this.isHealthy = false
       }
@@ -40,7 +40,7 @@ export class HealthChecker {
     this.lastCheck = {
       timestamp: Date.now(),
       results,
-      healthy: this.isHealthy
+      healthy: this.isHealthy,
     }
 
     return this.lastCheck
@@ -50,7 +50,7 @@ export class HealthChecker {
   getHealth() {
     return {
       healthy: this.isHealthy,
-      lastCheck: this.lastCheck
+      lastCheck: this.lastCheck,
     }
   }
 }
@@ -66,17 +66,19 @@ healthChecker.addCheck('dom', () => {
 // Memory health check
 healthChecker.addCheck('memory', () => {
   if (!performance.memory) return true
-  
+
   const used = performance.memory.usedJSHeapSize
   const limit = performance.memory.jsHeapSizeLimit
   const percentage = (used / limit) * 100
-  
+
   return percentage < 90 // Healthy if under 90% memory usage
 })
 
 // React health check
 healthChecker.addCheck('react', () => {
-  return typeof React !== 'undefined' && document.querySelector('[data-reactroot], #root > *') !== null
+  return (
+    typeof React !== 'undefined' && document.querySelector('[data-reactroot], #root > *') !== null
+  )
 })
 
 // Network health check
