@@ -7,57 +7,96 @@ const Home = () => {
   const heroRef = useRef(null)
   const [scrollY, setScrollY] = useState(0)
   const [stats, setStats] = useState({ clinics: 0, years: 0, coverage: 0 })
+  const [animationsEnabled, setAnimationsEnabled] = useState(true)
 
   useEffect(() => {
+    // Check if animations should be enabled (performance consideration)
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    setAnimationsEnabled(!prefersReducedMotion)
+
     const handleMouseMove = (e) => {
-      if (heroRef.current) {
-        const rect = heroRef.current.getBoundingClientRect()
-        setMousePosition({
-          x: e.clientX - rect.left,
-          y: e.clientY - rect.top
-        })
+      if (heroRef.current && animationsEnabled) {
+        try {
+          const rect = heroRef.current.getBoundingClientRect()
+          setMousePosition({
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+          })
+        } catch (error) {
+          console.warn('Mouse tracking error:', error)
+        }
       }
     }
 
     const handleScroll = () => {
-      setScrollY(window.scrollY)
+      if (animationsEnabled) {
+        setScrollY(window.scrollY)
+      }
     }
 
-    // Animate stats counter
+    // Animate stats counter with error handling
     const animateStats = () => {
-      const duration = 2000
-      const steps = 60
-      const increment = 100 / steps
-      
-      let currentStep = 0
-      const timer = setInterval(() => {
-        currentStep++
-        const progress = currentStep / steps
+      if (!animationsEnabled) {
+        // Set final values immediately if animations are disabled
+        setStats({ clinics: 15, years: 7, coverage: 100 })
+        return
+      }
+
+      try {
+        const duration = 2000
+        const steps = 60
         
-        setStats({
-          clinics: Math.min(15, Math.floor(15 * progress)),
-          years: Math.min(7, Math.floor(7 * progress)),
-          coverage: Math.min(100, Math.floor(100 * progress))
-        })
+        let currentStep = 0
+        const timer = setInterval(() => {
+          currentStep++
+          const progress = currentStep / steps
+          
+          setStats({
+            clinics: Math.min(15, Math.floor(15 * progress)),
+            years: Math.min(7, Math.floor(7 * progress)),
+            coverage: Math.min(100, Math.floor(100 * progress))
+          })
+          
+          if (currentStep >= steps) {
+            clearInterval(timer)
+          }
+        }, duration / steps)
         
-        if (currentStep >= steps) {
-          clearInterval(timer)
-        }
-      }, duration / steps)
+        return timer
+      } catch (error) {
+        console.warn('Stats animation error:', error)
+        setStats({ clinics: 15, years: 7, coverage: 100 })
+        return null
+      }
     }
 
     // Delay animation start
-    const timer = setTimeout(animateStats, 1000)
+    const animationTimer = setTimeout(() => {
+      const statsTimer = animateStats()
+      // Store the timer reference for cleanup
+      if (statsTimer) {
+        window.statsAnimationTimer = statsTimer
+      }
+    }, 1000)
 
-    window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('scroll', handleScroll)
+    // Add event listeners conditionally
+    if (animationsEnabled) {
+      window.addEventListener('mousemove', handleMouseMove, { passive: true })
+      window.addEventListener('scroll', handleScroll, { passive: true })
+    }
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('scroll', handleScroll)
-      clearTimeout(timer)
+      if (animationsEnabled) {
+        window.removeEventListener('mousemove', handleMouseMove)
+        window.removeEventListener('scroll', handleScroll)
+      }
+      clearTimeout(animationTimer)
+      if (window.statsAnimationTimer) {
+        clearInterval(window.statsAnimationTimer)
+        delete window.statsAnimationTimer
+      }
     }
-  }, [])
+  }, [animationsEnabled])
 
   return (
     <div className="home">
@@ -67,7 +106,10 @@ const Home = () => {
           <div 
             className="hero-glow glow"
             style={{
-              transform: `translate(${mousePosition.x * 0.02}px, ${mousePosition.y * 0.02}px) translate(-50%, -50%)`
+              transform: animationsEnabled 
+                ? `translate(${mousePosition.x * 0.02}px, ${mousePosition.y * 0.02}px) translate(-50%, -50%)`
+                : 'translate(-50%, -50%)',
+              willChange: animationsEnabled ? 'transform' : 'auto'
             }}
           ></div>
           <div className="floating-shapes">
@@ -101,7 +143,9 @@ const Home = () => {
           <div 
             className="hero-gradient"
             style={{
-              background: `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.2), transparent)`
+              background: animationsEnabled 
+                ? `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.2), transparent)`
+                : 'radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.2), transparent)'
             }}
           ></div>
         </div>
@@ -155,13 +199,16 @@ const Home = () => {
             </div>
           </div>
         </div>
-        <div 
-          className="cursor-follower"
-          style={{
-            left: `${mousePosition.x}px`,
-            top: `${mousePosition.y}px`
-          }}
-        ></div>
+        {animationsEnabled && (
+          <div 
+            className="cursor-follower"
+            style={{
+              left: `${mousePosition.x}px`,
+              top: `${mousePosition.y}px`,
+              willChange: 'transform'
+            }}
+          ></div>
+        )}
       </section>
 
       {/* Value Tiles */}
