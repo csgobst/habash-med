@@ -1,17 +1,17 @@
-import { HashRouter as Router, Routes, Route } from 'react-router-dom'
-import { ThemeProvider } from './contexts/ThemeContext'
-import Header from './components/Header'
+import { Route, HashRouter as Router, Routes } from 'react-router-dom'
 import Footer from './components/Footer'
+import Header from './components/Header'
 import ScrollToTop from './components/ScrollToTop'
-import Home from './pages/Home'
+import { ThemeProvider } from './contexts/ThemeContext'
 import About from './pages/About'
+import Contact from './pages/Contact'
+import Coverage from './pages/Coverage'
+import Home from './pages/Home'
+import Partners from './pages/Partners'
 import Products from './pages/Products'
 import Services from './pages/Services'
-import Coverage from './pages/Coverage'
-import Partners from './pages/Partners'
-import Team from './pages/Team'
 import Strategy from './pages/Strategy'
-import Contact from './pages/Contact'
+import Team from './pages/Team'
 
 function App() {
   return (
@@ -39,4 +39,3 @@ function App() {
 }
 
 export default App
-
