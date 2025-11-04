@@ -21,6 +21,10 @@ npm install
 echo "🔨 Building project..."
 npm run build
 
+# Copy index.html to 404.html for SPA routing
+echo "📋 Setting up SPA routing..."
+cp dist/index.html dist/404.html
+
 # Check if build was successful
 if [ ! -d "dist" ]; then
     echo "❌ Build failed! dist directory not created."

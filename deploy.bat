@@ -20,6 +20,10 @@ REM Build the project
 echo 🔨 Building project...
 npm run build
 
+REM Copy index.html to 404.html for SPA routing
+echo 📋 Setting up SPA routing...
+copy "dist\index.html" "dist\404.html"
+
 REM Check if build was successful
 if not exist dist (
     echo ❌ Build failed! dist directory not created.

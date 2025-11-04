@@ -60,12 +60,18 @@ const themes = {
 
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
-    const savedTheme = localStorage.getItem('theme') || 'blue'
-    return savedTheme
+    // Safely access localStorage
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('theme') || 'blue'
+    }
+    return 'blue'
   })
 
   useEffect(() => {
-    localStorage.setItem('theme', theme)
+    // Safely access localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', theme)
+    }
     const themeColors = themes[theme]
     
     // Update CSS variables

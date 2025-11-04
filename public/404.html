@@ -9,8 +9,8 @@
       content="Founded in 2018 in Damascus, Habash Med supplies ophthalmic equipment, disposables, and on-site technical support to clinics and hospitals across Syria."
     />
     <title>Habash Med — Ophthalmic Products & Technical Services in Syria</title>
+    <!-- GitHub Pages SPA redirect handling -->
     <script>
-      // GitHub Pages SPA redirect
       ;(function (l) {
         if (l.search[1] === '/') {
           var decoded = l.search
@@ -23,54 +23,10 @@
           window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash)
         }
       })(window.location)
-
-      // Fallback redirect for direct access
-      setTimeout(function () {
-        if (window.location.pathname !== '/habash-med/' && !window.location.hash) {
-          const path = window.location.pathname.replace('/habash-med', '')
-          if (path && path !== '/') {
-            window.location.replace('/habash-med/#' + path)
-          } else {
-            window.location.replace('/habash-med/')
-          }
-        }
-      }, 100)
     </script>
   </head>
   <body>
-    <div
-      style="
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        font-family: Arial, sans-serif;
-      "
-    >
-      <div style="text-align: center">
-        <div style="margin-bottom: 20px">Loading Habash Med...</div>
-        <div
-          style="
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #3498db;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-          "
-        ></div>
-      </div>
-    </div>
-    <style>
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-    </style>
+    <div id="root"></div>
+    <script type="module" src="./src/main.jsx"></script>
   </body>
 </html>
