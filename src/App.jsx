@@ -1,4 +1,5 @@
 import { Route, HashRouter as Router, Routes } from 'react-router-dom'
+import ErrorBoundary from './components/ErrorBoundary'
 import Footer from './components/Footer'
 import Header from './components/Header'
 import ScrollToTop from './components/ScrollToTop'
@@ -15,26 +16,28 @@ import Team from './pages/Team'
 
 function App() {
   return (
-    <ThemeProvider>
-      <Router>
-        <ScrollToTop />
-        <div className="App">
-          <Header />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/coverage" element={<Coverage />} />
-            <Route path="/partners" element={<Partners />} />
-            <Route path="/team" element={<Team />} />
-            <Route path="/strategy" element={<Strategy />} />
-            <Route path="/contact" element={<Contact />} />
-          </Routes>
-          <Footer />
-        </div>
-      </Router>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <Router basename="/habash-med">
+          <ScrollToTop />
+          <div className="App">
+            <Header />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/coverage" element={<Coverage />} />
+              <Route path="/partners" element={<Partners />} />
+              <Route path="/team" element={<Team />} />
+              <Route path="/strategy" element={<Strategy />} />
+              <Route path="/contact" element={<Contact />} />
+            </Routes>
+            <Footer />
+          </div>
+        </Router>
+      </ThemeProvider>
+    </ErrorBoundary>
   )
 }
 
