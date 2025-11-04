@@ -37,8 +37,10 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Copy index.html to 404.html for SPA routing
-        run: cp dist/index.html dist/404.html
+      - name: Setup SPA routing for GitHub Pages
+        run: |
+          cp dist/index.html dist/404.html
+          echo "habashmed.com" > dist/CNAME || true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
