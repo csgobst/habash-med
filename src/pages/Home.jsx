@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import './Home.css'
 
@@ -20,7 +20,7 @@ const Home = () => {
           const rect = heroRef.current.getBoundingClientRect()
           setMousePosition({
             x: e.clientX - rect.left,
-            y: e.clientY - rect.top
+            y: e.clientY - rect.top,
           })
         } catch (error) {
           console.warn('Mouse tracking error:', error)
@@ -45,23 +45,23 @@ const Home = () => {
       try {
         const duration = 2000
         const steps = 60
-        
+
         let currentStep = 0
         const timer = setInterval(() => {
           currentStep++
           const progress = currentStep / steps
-          
+
           setStats({
             clinics: Math.min(15, Math.floor(15 * progress)),
             years: Math.min(7, Math.floor(7 * progress)),
-            coverage: Math.min(100, Math.floor(100 * progress))
+            coverage: Math.min(100, Math.floor(100 * progress)),
           })
-          
+
           if (currentStep >= steps) {
             clearInterval(timer)
           }
         }, duration / steps)
-        
+
         return timer
       } catch (error) {
         console.warn('Stats animation error:', error)
@@ -103,13 +103,15 @@ const Home = () => {
       {/* Hero Section */}
       <section className="hero" ref={heroRef}>
         <div className="hero-background">
-          <div 
+          <div
             className="hero-glow glow"
             style={{
-              transform: animationsEnabled 
-                ? `translate(${mousePosition.x * 0.02}px, ${mousePosition.y * 0.02}px) translate(-50%, -50%)`
+              transform: animationsEnabled
+                ? `translate(${mousePosition.x * 0.02}px, ${
+                    mousePosition.y * 0.02
+                  }px) translate(-50%, -50%)`
                 : 'translate(-50%, -50%)',
-              willChange: animationsEnabled ? 'transform' : 'auto'
+              willChange: animationsEnabled ? 'transform' : 'auto',
             }}
           ></div>
           <div className="floating-shapes">
@@ -121,7 +123,7 @@ const Home = () => {
                   left: `${(i * 8.33) % 100}%`,
                   top: `${(i * 7) % 100}%`,
                   animationDelay: `${i * 0.5}s`,
-                  animationDuration: `${10 + (i % 5)}s`
+                  animationDuration: `${10 + (i % 5)}s`,
                 }}
               ></div>
             ))}
@@ -135,17 +137,17 @@ const Home = () => {
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 100}%`,
                   animationDelay: `${Math.random() * 5}s`,
-                  animationDuration: `${15 + Math.random() * 10}s`
+                  animationDuration: `${15 + Math.random() * 10}s`,
                 }}
               ></div>
             ))}
           </div>
-          <div 
+          <div
             className="hero-gradient"
             style={{
-              background: animationsEnabled 
+              background: animationsEnabled
                 ? `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.2), transparent)`
-                : 'radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.2), transparent)'
+                : 'radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.2), transparent)',
             }}
           ></div>
         </div>
@@ -160,8 +162,8 @@ const Home = () => {
               </h1>
             </div>
             <p className="hero-subtitle">
-              Founded in 2018 in Damascus, Habash Med supplies ophthalmic equipment, 
-              disposables, and on-site technical support to clinics and hospitals across Syria.
+              Founded in 2018 in Damascus, Habash Med supplies ophthalmic equipment, disposables,
+              and on-site technical support to clinics and hospitals across Syria.
             </p>
             <div className="hero-stats">
               <div className="hero-stat">
@@ -181,13 +183,25 @@ const Home = () => {
               <Link to="/products" className="btn-primary hero-btn">
                 <span>View Products</span>
                 <svg className="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path
+                    d="M7.5 15L12.5 10L7.5 5"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </Link>
               <Link to="/contact" className="btn-secondary hero-btn">
                 <span>Contact Sales</span>
                 <svg className="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path
+                    d="M7.5 15L12.5 10L7.5 5"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </Link>
             </div>
@@ -200,12 +214,12 @@ const Home = () => {
           </div>
         </div>
         {animationsEnabled && (
-          <div 
+          <div
             className="cursor-follower"
             style={{
               left: `${mousePosition.x}px`,
               top: `${mousePosition.y}px`,
-              willChange: 'transform'
+              willChange: 'transform',
             }}
           ></div>
         )}
@@ -250,23 +264,35 @@ const Home = () => {
               </div>
               <h3>Intraocular Lenses (IOLs)</h3>
               <p>Monofocal & hydrophobic acrylic lenses with superior quality and compatibility</p>
-              <Link to="/products" className="btn-secondary">Learn More</Link>
+              <Link to="/products" className="btn-secondary">
+                Learn More
+              </Link>
             </div>
             <div className="product-card card">
               <div className="product-image">
-                <img src="https://via.placeholder.com/400x300/8b5cf6/ffffff?text=Viscoelastic" alt="Viscoelastic" />
+                <img
+                  src="https://via.placeholder.com/400x300/8b5cf6/ffffff?text=Viscoelastic"
+                  alt="Viscoelastic"
+                />
               </div>
               <h3>Viscoelastic Solutions</h3>
               <p>HPMC and Sodium Hyaluronate solutions - sterile and dependable</p>
-              <Link to="/products" className="btn-secondary">Learn More</Link>
+              <Link to="/products" className="btn-secondary">
+                Learn More
+              </Link>
             </div>
             <div className="product-card card">
               <div className="product-image">
-                <img src="https://via.placeholder.com/400x300/06b6d4/ffffff?text=Surgical+Instruments" alt="Surgical Instruments" />
+                <img
+                  src="https://via.placeholder.com/400x300/06b6d4/ffffff?text=Surgical+Instruments"
+                  alt="Surgical Instruments"
+                />
               </div>
               <h3>Surgical Instruments & Supplies</h3>
               <p>Microsurgical knives, drapes, blades, and cannulas for precision surgery</p>
-              <Link to="/products" className="btn-secondary">Learn More</Link>
+              <Link to="/products" className="btn-secondary">
+                Learn More
+              </Link>
             </div>
           </div>
         </div>
@@ -299,7 +325,9 @@ const Home = () => {
             </div>
           </div>
           <div className="text-center" style={{ marginTop: '3rem' }}>
-            <Link to="/services" className="btn-primary">View All Services</Link>
+            <Link to="/services" className="btn-primary">
+              View All Services
+            </Link>
           </div>
         </div>
       </section>
@@ -311,10 +339,15 @@ const Home = () => {
             <div className="coverage-text">
               <h2>Serving Clinics & Hospitals Across Syria</h2>
               <p>Active in Damascus and Homs, with plans to expand to Northern Syria</p>
-              <Link to="/coverage" className="btn-primary">View Coverage Map</Link>
+              <Link to="/coverage" className="btn-primary">
+                View Coverage Map
+              </Link>
             </div>
             <div className="coverage-image">
-              <img src="https://via.placeholder.com/600x400/1e293b/6366f1?text=Syria+Coverage+Map" alt="Coverage Map" />
+              <img
+                src="https://via.placeholder.com/600x400/1e293b/6366f1?text=Syria+Coverage+Map"
+                alt="Coverage Map"
+              />
             </div>
           </div>
         </div>
@@ -340,20 +373,34 @@ const Home = () => {
           </div>
           <div className="partners-logos">
             <div className="partner-logo">
-              <img src="https://via.placeholder.com/200x100/6366f1/ffffff?text=Partner+1" alt="Partner" />
+              <img
+                src="https://via.placeholder.com/200x100/6366f1/ffffff?text=Partner+1"
+                alt="Partner"
+              />
             </div>
             <div className="partner-logo">
-              <img src="https://via.placeholder.com/200x100/8b5cf6/ffffff?text=Partner+2" alt="Partner" />
+              <img
+                src="https://via.placeholder.com/200x100/8b5cf6/ffffff?text=Partner+2"
+                alt="Partner"
+              />
             </div>
             <div className="partner-logo">
-              <img src="https://via.placeholder.com/200x100/06b6d4/ffffff?text=Partner+3" alt="Partner" />
+              <img
+                src="https://via.placeholder.com/200x100/06b6d4/ffffff?text=Partner+3"
+                alt="Partner"
+              />
             </div>
             <div className="partner-logo">
-              <img src="https://via.placeholder.com/200x100/6366f1/ffffff?text=Partner+4" alt="Partner" />
+              <img
+                src="https://via.placeholder.com/200x100/6366f1/ffffff?text=Partner+4"
+                alt="Partner"
+              />
             </div>
           </div>
           <div className="text-center" style={{ marginTop: '3rem' }}>
-            <Link to="/partners" className="btn-secondary">View Partners & Achievements</Link>
+            <Link to="/partners" className="btn-secondary">
+              View Partners & Achievements
+            </Link>
           </div>
         </div>
       </section>
@@ -380,7 +427,9 @@ const Home = () => {
                 </div>
               </div>
             </div>
-            <Link to="/contact" className="btn-primary">Request a Quote</Link>
+            <Link to="/contact" className="btn-primary">
+              Request a Quote
+            </Link>
           </div>
         </div>
       </section>
